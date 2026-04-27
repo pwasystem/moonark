@@ -2,6 +2,8 @@
 
 Este documento serve como o repositório central de conhecimento sobre a evolução, arquitetura e decisões técnicas do projeto **MoonArk**.
 
+---
+
 ## 🚀 Visão Geral
 A MoonArk é uma plataforma de arquivamento de dados interestelar e IA cognitiva, projetada para preservar o conhecimento humano fora da Terra. O site foi desenvolvido com foco em estética premium, performance e resiliência.
 
@@ -12,66 +14,71 @@ A MoonArk é uma plataforma de arquivamento de dados interestelar e IA cognitiva
 - **Backend/Serviços**:
     - **Firebase Hosting**: Hospedagem global com URLs limpas.
     - **Firebase Auth**: Autenticação robusta (Google e E-mail/Senha).
-    - **Firebase Analytics**: Monitoramento de tráfego.
-    - **Google Groups**: Gerenciamento de comunidade e newsletter.
-    - **Google Apps Script (GAS)**: Sincronização inicial e lógica de backend legado.
+    - **Firebase Firestore**: Armazenamento de dados em tempo real (Newsletter).
+    - **Google Apps Script (GAS)**: Proxy de e-mail para formulário de contato.
+    - **GitHub**: Controle de versão e repositório público.
 
 ---
 
 ## 🏛 Arquitetura e Estrutura de Arquivos
 
-### Arquivos Principais
-- `index.html`: Página inicial (Missão) e ponto de entrada do Hosting.
-- `tech.html`: Detalhes da infraestrutura tecnológica e IA.
-- `partner.html`: Ecossistema de parceiros e integrações.
-- `invest.html`: Portal para investidores e consultoria.
-- `Código.js`: Lógica legado para Google Apps Script.
+### Organização de Pastas
+- `/public`: Diretório raiz do site (HTML e Ativos).
+- `/docs`: Documentação técnica e memórias do projeto.
 
-### Configurações
-- `firebase.json`: Configurações de Hosting (cleanUrls, ignore patterns).
-- `.firebaserc`: Vínculo com o projeto `moonark-project`.
-- `.clasp.json`: Sincronização com o ambiente Google Apps Script.
+### Arquivos Principais (`/public`)
+- `index.html`: Página inicial (Missão) e ponto de entrada.
+- `tech.html`: Infraestrutura tecnológica e IA.
+- `partner.html`: Ecossistema de parceiros.
+- `invest.html`: Portal para investidores.
+
+### Configurações e Backend
+- `firebase.json`: Configurações de Hosting e Firestore.
+- `firestore.rules`: Regras de segurança (Newsletter pública, demais protegidos).
+- `Código.js`: Backend GAS para processamento de e-mails de contato.
+- `appsscript.json`: Configuração de scopes e deployment do GAS.
+- `.gitignore`: Proteção de segredos e arquivos temporários.
 
 ---
 
 ## ✅ Conquistas e Implementações
 
 ### 1. Design & UI
-- **Alinhamento**: Todos os botões "Acessar Terminal" foram fixados à direita para um layout limpo.
-- **Otimização de Imagens**: Ícones externos (como o do Google no Login) foram convertidos para **Data URLs (Base64)** otimizadas, reduzindo requisições HTTP e garantindo carregamento instantâneo.
-- **Menus**: Navegação reativada em todas as páginas com transições suaves e estados ativos.
+- **Widget de Contato**: Implementação de um botão flutuante premium com formulário integrado em todas as páginas.
+- **Navegação Inteligente**: Links de "Contato" no rodapé agora acionam o widget em vez de redirecionar o usuário.
+- **Limpeza Visual**: Remoção de links externos desnecessários (LinkedIn) para foco total na marca MoonArk.
 
-### 2. Infraestrutura Firebase
-- **Deploy**: Migração concluída do Google Sites/GAS para **Firebase Hosting**.
-- **URLs Limpas**: Configuração de rotas sem a extensão `.html` (ex: `/tech` em vez de `/tech.html`).
-- **Autenticação**:
-    - Implementação de `onAuthStateChanged` robusto para atualizar o UI do Terminal em tempo real.
-    - Configuração de persistência local para manter o usuário logado entre as páginas.
+### 2. Infraestrutura & Backend
+- **Newsletter 2.0**: Migração do Google Groups para **Firebase Firestore**. Cadastros são instantâneos, invisíveis e seguros.
+- **Envio de E-mail via GAS**: Lógica de contato que envia mensagens diretamente para o proprietário (`spiderpoison@gmail.com`) via proxy de script.
+- **Segurança de Dados**: Configuração de regras do Firestore para permitir inscrições públicas na newsletter mantendo o restante do banco protegido.
 
-### 3. Comunicação
-- **Integração Google Groups**: Formulários de newsletter e links de contato redirecionam para o grupo oficial `moonark-project`.
+### 3. DevOps & Publicação
+- **Reestruturação**: Organização profissional dos arquivos em pastas separadas para site e documentos.
+- **Git/GitHub**: Projeto versionado e publicado em [pwasystem/moonark](https://github.com/pwasystem/moonark).
 
 ---
 
 ## 🔗 Links Essenciais
 - **Site Live**: [https://moonark-project.web.app](https://moonark-project.web.app)
+- **Repositório GitHub**: [https://github.com/pwasystem/moonark](https://github.com/pwasystem/moonark)
 - **Console Firebase**: [https://console.firebase.google.com/project/moonark-project/](https://console.firebase.google.com/project/moonark-project/)
-- **Comunidade/Newsletter**: [https://groups.google.com/g/moonark-project](https://groups.google.com/g/moonark-project)
 
 ---
 
 ## 📅 Histórico de Mudanças Recentes
-- **2026-04-27**: Publicação inicial no Firebase Hosting e limpeza de URLs.
-- **2026-04-27**: Implementação do sistema de login unificado e persistente.
-- **2026-04-27**: Otimização de ativos gráficos para strings Base64 de baixo peso.
+- **2026-04-27**: Reestruturação total de pastas (`/public` e `/docs`).
+- **2026-04-27**: Implementação do sistema de Newsletter via Firestore e Regras de Segurança.
+- **2026-04-27**: Lançamento do Widget de Contato Flutuante integrado ao Google Apps Script.
+- **2026-04-27**: Publicação do código-fonte no GitHub.
 
 ---
 
 ## 🔮 Próximos Passos Sugeridos
 - [ ] Implementar o painel real do "Terminal" após o login.
-- [ ] Configurar um domínio personalizado (`moonark.ai` ou similar).
+- [ ] Configurar um domínio personalizado (`moonark.ai`).
 - [ ] Adicionar internacionalização (Inglês/Português).
-- [ ] Integrar Firestore para gerenciar dados específicos dos usuários do terminal.
+- [ ] Criar dashboard administrativo para visualizar inscritos da newsletter no Terminal.
 
 ---
-*Última atualização: 27 de Abril de 2026*
+*Última atualização: 27 de Abril de 2026 (Versão 2.0)*
