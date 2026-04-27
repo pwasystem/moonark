@@ -1,0 +1,14 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Permite que qualquer pessoa se inscreva na newsletter
+    match /newsletter/{document} {
+      allow create: if true;
+    }
+    
+    // Restante das coleções exige autenticação
+    match /{document=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
