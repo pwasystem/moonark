@@ -81,8 +81,8 @@ A MoonArk é uma plataforma de arquivamento de dados interestelar e IA cognitiva
 ## 🔮 Próximos Passos Sugeridos
 - [x] Implementar o painel real do "Terminal" após o login. *(Dashboard de Inscritos concluído)*
 - [x] Adicionar internacionalização (Inglês/Português).
-- [ ] Configurar Domínio Personalizado (moonark.ai).
-- [ ] Ampliar métricas do Terminal com gráficos ou dados analíticos (futuro).
+- [x] Criar um forúm para discussões sobre as tecnologias e propósitos do projeto.
+- [ ] Adicionar métricas do Terminal com gráficos ou dados analíticos (futuro).
 
 ---
 *Última atualização: 29 de Abril de 2026 (Versão 2.2)*
