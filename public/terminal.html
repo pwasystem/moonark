@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body { background-color: #0d1322; color: #dde2f7; font-family: 'Space Grotesk', sans-serif; }
     .grain-overlay {
@@ -20,7 +21,7 @@
 <body class="flex items-center justify-center min-h-screen relative p-4">
   <div class="fixed inset-0 grain-overlay z-0"></div>
   
-  <div class="bg-[#151b2a] rounded-2xl border border-white/10 shadow-[0_0_50px_rgba(120,197,241,0.1)] max-w-4xl w-full p-6 relative z-10">
+  <div class="bg-[#151b2a] rounded-2xl border border-white/10 shadow-[0_0_50px_rgba(120,197,241,0.1)] max-w-5xl w-full p-6 relative z-10">
     <div class="flex flex-col sm:flex-row items-center justify-between border-b border-white/10 pb-4 mb-6 gap-4">
       <div class="flex items-center gap-4">
         <div class="w-12 h-12 rounded-full bg-[#005170]/30 flex items-center justify-center border border-[#78c5f1]/20">
@@ -40,8 +41,14 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
       <!-- Sidebar Navigation -->
       <div class="space-y-2">
-        <button id="tab-dashboard" class="w-full text-left px-4 py-3 bg-[#0d1322] border border-[#acdfff]/30 rounded-xl text-[#acdfff] font-bold transition-all flex items-center gap-2">
-          <span class="material-symbols-outlined">group</span> Inscritos
+        <button id="tab-metrics" class="w-full text-left px-4 py-3 bg-[#0d1322] border border-[#acdfff]/30 rounded-xl text-[#acdfff] font-bold transition-all flex items-center gap-2">
+          <span class="material-symbols-outlined">analytics</span> Métricas
+        </button>
+        <button id="tab-dashboard" class="w-full text-left px-4 py-3 bg-[#0d1322] hover:bg-[#191f2f] border border-white/5 rounded-xl text-secondary transition-all flex items-center gap-2">
+          <span class="material-symbols-outlined">email</span> Inscritos
+        </button>
+        <button id="tab-users" class="w-full text-left px-4 py-3 bg-[#0d1322] hover:bg-[#191f2f] border border-white/5 rounded-xl text-secondary transition-all flex items-center gap-2">
+          <span class="material-symbols-outlined">shield_person</span> Guardiões
         </button>
         <button id="tab-forum" class="w-full text-left px-4 py-3 bg-[#0d1322] hover:bg-[#191f2f] border border-white/5 rounded-xl text-secondary transition-all flex items-center gap-2">
           <span class="material-symbols-outlined">forum</span> Fórum
@@ -51,14 +58,53 @@
       <!-- Main Content Area -->
       <div class="col-span-1 md:col-span-3 bg-[#0d1322] rounded-xl border border-white/5 p-6 h-[500px] overflow-y-auto">
         
+        <!-- View: Metrics -->
+        <div id="view-metrics" class="block">
+          <h2 class="text-lg font-bold text-[#acdfff] mb-4">Métricas da Arca</h2>
+          <div class="grid grid-cols-3 gap-4 mb-8">
+            <div class="bg-[#151b2a] p-4 rounded-xl border border-white/10 text-center">
+              <span class="text-xs uppercase tracking-widest text-secondary block mb-1">Guardiões</span>
+              <span id="metric-users" class="text-3xl font-bold text-white">0</span>
+            </div>
+            <div class="bg-[#151b2a] p-4 rounded-xl border border-white/10 text-center">
+              <span class="text-xs uppercase tracking-widest text-secondary block mb-1">Inscritos</span>
+              <span id="metric-subs" class="text-3xl font-bold text-white">0</span>
+            </div>
+            <div class="bg-[#151b2a] p-4 rounded-xl border border-white/10 text-center">
+              <span class="text-xs uppercase tracking-widest text-secondary block mb-1">Transmissões</span>
+              <span id="metric-posts" class="text-3xl font-bold text-white">0</span>
+            </div>
+          </div>
+          <div class="bg-[#151b2a] p-4 rounded-xl border border-white/10 h-64 flex justify-center items-center">
+             <canvas id="metricsChart"></canvas>
+          </div>
+        </div>
+
+        <!-- View: Users -->
+        <div id="view-users" class="hidden">
+          <h2 class="text-lg font-bold text-[#acdfff] mb-4">Gestão de Guardiões</h2>
+          <table class="w-full text-sm text-[#899299]">
+            <thead class="bg-[#151b2a] sticky top-0">
+              <tr>
+                <th class="p-3 font-medium text-[#c1c6db] border-b border-white/5 text-left">Guardião</th>
+                <th class="p-3 font-medium text-[#c1c6db] border-b border-white/5 text-left">E-mail</th>
+                <th class="p-3 font-medium text-[#c1c6db] border-b border-white/5 text-left">Último Acesso</th>
+              </tr>
+            </thead>
+            <tbody id="usersList">
+              <tr><td colspan="3" class="text-center py-4">Iniciando decodificação...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
         <!-- View: Dashboard (Newsletter) -->
-        <div id="view-dashboard" class="block">
+        <div id="view-dashboard" class="hidden">
           <h2 class="text-lg font-bold text-[#acdfff] mb-4">Base de Dados: Newsletter</h2>
           <table class="w-full text-sm text-[#899299]">
             <thead class="bg-[#151b2a] sticky top-0">
               <tr>
                 <th class="p-3 font-medium text-[#c1c6db] border-b border-white/5 text-left">E-mail</th>
-                <th class="p-3 font-medium text-[#c1c6db] border-b border-white/5 text-left">Data</th>
+                <th class="p-3 font-medium text-[#c1c6db] border-b border-white/5 text-left">Data de Registro</th>
               </tr>
             </thead>
             <tbody id="subscribersList">
@@ -71,7 +117,6 @@
         <div id="view-forum" class="hidden">
           <h2 class="text-lg font-bold text-[#acdfff] mb-4">Fórum de Discussões</h2>
           
-          <!-- Post Form -->
           <div class="bg-[#151b2a] p-4 rounded-xl border border-white/10 mb-6">
             <h3 class="text-sm font-bold text-white mb-3">Nova Transmissão</h3>
             <input type="text" id="forumTitle" placeholder="Assunto..." class="w-full bg-[#0d1322] border border-white/10 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-primary text-white mb-3">
@@ -82,7 +127,6 @@
             </div>
           </div>
 
-          <!-- Posts Feed -->
           <div id="forumPosts" class="space-y-4">
             <div class="text-center py-4 text-secondary text-sm">Sincronizando frequências...</div>
           </div>

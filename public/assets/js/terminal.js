@@ -1,8 +1,9 @@
 import { subscribeToAuthChanges, logout } from './firebase/auth.js';
 import { db } from './firebase/config.js';
-import { collection, getDocs, query, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+import { collection, getDocs, query, orderBy, addDoc, serverTimestamp, getCountFromServer } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 let currentUser = null;
+let metricsChartInstance = null;
 
 document.addEventListener('DOMContentLoaded', () => {
   subscribeToAuthChanges(async (user) => {
@@ -17,6 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
       userNameElement.innerText = user.displayName || user.email.split('@')[0];
     }
     
+    // Initial Load
+    await loadMetrics();
+    await loadUsers();
     await loadDashboard();
     await loadForumPosts();
   });
@@ -25,31 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
     await logout();
   });
 
-  // Tabs Logic
-  const tabDashboard = document.getElementById('tab-dashboard');
-  const tabForum = document.getElementById('tab-forum');
-  const viewDashboard = document.getElementById('view-dashboard');
-  const viewForum = document.getElementById('view-forum');
-
-  tabDashboard?.addEventListener('click', () => {
-    tabDashboard.classList.add('border-[#acdfff]/30', 'text-[#acdfff]');
-    tabDashboard.classList.remove('border-white/5', 'text-secondary');
-    tabForum.classList.remove('border-[#acdfff]/30', 'text-[#acdfff]');
-    tabForum.classList.add('border-white/5', 'text-secondary');
-    
-    viewDashboard.classList.remove('hidden');
-    viewForum.classList.add('hidden');
-  });
-
-  tabForum?.addEventListener('click', () => {
-    tabForum.classList.add('border-[#acdfff]/30', 'text-[#acdfff]');
-    tabForum.classList.remove('border-white/5', 'text-secondary');
-    tabDashboard.classList.remove('border-[#acdfff]/30', 'text-[#acdfff]');
-    tabDashboard.classList.add('border-white/5', 'text-secondary');
-    
-    viewForum.classList.remove('hidden');
-    viewDashboard.classList.add('hidden');
-  });
+  // Setup Tabs Navigation
+  setupTabs();
 
   // Forum Submit Logic
   document.getElementById('forumSubmit')?.addEventListener('click', async () => {
@@ -83,6 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
       msgEl.classList.add('text-[#acdfff]');
       
       await loadForumPosts();
+      await loadMetrics(); // update post count
     } catch (e) {
       msgEl.innerText = "Falha ao transmitir.";
       msgEl.classList.add('text-red-400');
@@ -93,6 +75,132 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
+function setupTabs() {
+  const tabs = ['metrics', 'users', 'dashboard', 'forum'];
+  
+  tabs.forEach(tab => {
+    const tabEl = document.getElementById(`tab-${tab}`);
+    if(!tabEl) return;
+    
+    tabEl.addEventListener('click', () => {
+      // Reset all
+      tabs.forEach(t => {
+        document.getElementById(`tab-${t}`).className = 'w-full text-left px-4 py-3 bg-[#0d1322] hover:bg-[#191f2f] border border-white/5 rounded-xl text-secondary transition-all flex items-center gap-2';
+        document.getElementById(`view-${t}`).classList.add('hidden');
+        document.getElementById(`view-${t}`).classList.remove('block');
+      });
+
+      // Active
+      tabEl.className = 'w-full text-left px-4 py-3 bg-[#0d1322] border border-[#acdfff]/30 rounded-xl text-[#acdfff] font-bold transition-all flex items-center gap-2';
+      const view = document.getElementById(`view-${tab}`);
+      view.classList.remove('hidden');
+      view.classList.add('block');
+    });
+  });
+}
+
+async function loadMetrics() {
+  try {
+    const usersSnap = await getCountFromServer(collection(db, "users"));
+    const subsSnap = await getCountFromServer(collection(db, "newsletter"));
+    const postsSnap = await getCountFromServer(collection(db, "forum_posts"));
+
+    const usersCount = usersSnap.data().count;
+    const subsCount = subsSnap.data().count;
+    const postsCount = postsSnap.data().count;
+
+    document.getElementById('metric-users').innerText = usersCount;
+    document.getElementById('metric-subs').innerText = subsCount;
+    document.getElementById('metric-posts').innerText = postsCount;
+
+    renderChart(usersCount, subsCount, postsCount);
+  } catch (error) {
+    console.error("Erro nas métricas:", error);
+  }
+}
+
+function renderChart(users, subs, posts) {
+  const ctx = document.getElementById('metricsChart');
+  if(!ctx) return;
+
+  if (metricsChartInstance) {
+    metricsChartInstance.destroy();
+  }
+
+  metricsChartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Guardiões', 'Inscritos', 'Transmissões'],
+      datasets: [{
+        label: 'Registros',
+        data: [users, subs, posts],
+        backgroundColor: [
+          'rgba(172, 223, 255, 0.6)',
+          'rgba(120, 197, 241, 0.6)',
+          'rgba(193, 198, 219, 0.6)'
+        ],
+        borderColor: [
+          '#acdfff',
+          '#78c5f1',
+          '#c1c6db'
+        ],
+        borderWidth: 1,
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          grid: { color: 'rgba(255, 255, 255, 0.05)' },
+          ticks: { color: '#899299', stepSize: 1 }
+        },
+        x: {
+          grid: { display: false },
+          ticks: { color: '#899299' }
+        }
+      }
+    }
+  });
+}
+
+async function loadUsers() {
+  const listEl = document.getElementById('usersList');
+  if (!listEl) return;
+
+  try {
+    const q = query(collection(db, "users"), orderBy("lastLogin", "desc"));
+    const snapshot = await getDocs(q);
+    
+    listEl.innerHTML = ''; 
+
+    if (snapshot.empty) {
+      listEl.innerHTML = '<tr><td colspan="3" class="text-center py-4 text-secondary">Nenhum guardião detectado.</td></tr>';
+      return;
+    }
+
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      const tr = document.createElement('tr');
+      const date = data.lastLogin ? data.lastLogin.toDate().toLocaleDateString('pt-BR') : 'N/A';
+      tr.innerHTML = `
+        <td class="p-3 border-b border-white/5 text-[#c1c6db] font-bold">${data.displayName}</td>
+        <td class="p-3 border-b border-white/5 text-[#c1c6db]">${data.email}</td>
+        <td class="p-3 border-b border-white/5 text-xs font-mono">${date}</td>
+      `;
+      listEl.appendChild(tr);
+    });
+  } catch (error) {
+    console.error("Erro ao buscar usuários:", error);
+    listEl.innerHTML = '<tr><td colspan="3" class="text-center py-4 text-red-400">Falha ao acessar registros.</td></tr>';
+  }
+}
 
 async function loadDashboard() {
   const listEl = document.getElementById('subscribersList');
