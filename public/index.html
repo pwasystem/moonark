@@ -344,6 +344,36 @@
   </footer>
   <script type="module" src="/assets/js/main.js"></script>
 
+  <!-- Auth Modal -->
+  <div id="authModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm">
+    <div class="bg-[#151b2a] p-8 rounded-2xl border border-primary/20 shadow-2xl w-full max-w-sm relative">
+      <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-white/50 hover:text-white material-symbols-outlined">close</button>
+      <h3 class="font-headline text-2xl font-bold mb-6 text-[#acdfff] text-center">Autenticação</h3>
+      
+      <div id="authError" class="hidden mb-4 p-3 bg-red-900/20 border border-red-500/30 text-[#ffb4ab] rounded-xl text-xs text-center"></div>
+
+      <div class="space-y-4">
+        <input type="email" id="authEmail" placeholder="E-mail" class="w-full bg-[#0d1322] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary text-on-surface">
+        <input type="password" id="authPassword" placeholder="Senha" class="w-full bg-[#0d1322] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary text-on-surface">
+        
+        <div class="flex gap-2">
+          <button onclick="handleAuth('login')" class="flex-1 bg-surface-variant/50 text-[#c1c6db] py-3 rounded-xl font-bold text-xs hover:bg-surface-variant transition-all border border-white/5">Entrar</button>
+          <button onclick="handleAuth('register')" class="flex-1 bg-[#acdfff] text-[#00344a] py-3 rounded-xl font-bold text-xs hover:brightness-110 transition-all">Registrar</button>
+        </div>
+
+        <div class="relative flex py-2 items-center">
+          <div class="flex-grow border-t border-white/10"></div>
+          <span class="flex-shrink-0 mx-4 text-xs text-white/30 uppercase tracking-widest">Ou</span>
+          <div class="flex-grow border-t border-white/10"></div>
+        </div>
+
+        <button onclick="loginWithGoogle()" class="w-full bg-white text-black py-3 rounded-xl font-bold text-xs hover:bg-gray-200 transition-all flex justify-center items-center gap-2">
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" class="w-4 h-4"> Continuar com Google
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Floating Contact Widget -->
   <div id="contactWidget" class="fixed bottom-8 right-8 z-[100]">
     <button onclick="toggleContactForm()"
