@@ -7,6 +7,10 @@ import {
   logout, 
   subscribeToAuthChanges 
 } from './firebase/auth.js';
+import { initI18n } from './i18n.js';
+
+// ---- i18n Inicialização ----
+initI18n();
 
 // ---- Autenticação UI ----
 const authModal = document.getElementById('authModal');

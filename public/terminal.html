@@ -38,6 +38,24 @@
         <a href="/" class="px-6 py-3 bg-[#191f2f] hover:bg-[#242a3a] text-white rounded-xl transition-colors border border-white/5 text-sm font-medium">Voltar à Superfície</a>
         <button id="logoutBtn" class="px-6 py-3 bg-red-900/20 hover:bg-red-900/40 text-[#ffb4ab] rounded-xl transition-colors border border-red-500/20 text-sm font-medium">Desconectar</button>
       </div>
+      
+      <!-- Newsletter Dashboard -->
+      <div class="mt-8 pt-6 border-t border-white/10 text-left">
+        <h2 class="text-lg font-bold text-[#acdfff] mb-4 flex items-center gap-2"><span class="material-symbols-outlined">group</span> Inscritos da Newsletter</h2>
+        <div class="bg-[#0d1322] rounded-xl border border-white/5 max-h-60 overflow-y-auto">
+          <table class="w-full text-sm text-[#899299]">
+            <thead class="bg-[#151b2a] sticky top-0">
+              <tr>
+                <th class="p-3 font-medium text-[#c1c6db] border-b border-white/5">E-mail</th>
+                <th class="p-3 font-medium text-[#c1c6db] border-b border-white/5">Data</th>
+              </tr>
+            </thead>
+            <tbody id="subscribersList">
+              <tr><td colspan="2" class="text-center py-4">Iniciando decodificação...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
   

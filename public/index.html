@@ -121,11 +121,15 @@
         <a class="text-[#c1c6db] hover:text-[#acdfff] transition-colors duration-300 ease-in-out"
           href="/invest">Investimento</a>
       </div>
-      <button id="terminalBtn"
-        class="bg-[#78c5f1] text-[#005170] px-6 py-2 rounded-lg font-bold hover:brightness-110 transition-all duration-300">
-        Acessar Terminal
-      </button>
-    </div>
+      <div class="flex items-center gap-4">
+        <button id="terminalBtn"
+          class="bg-[#78c5f1] text-[#005170] px-6 py-2 rounded-lg font-bold hover:brightness-110 transition-all duration-300">
+          Acessar Terminal
+        </button>
+        <button onclick="toggleLanguage()" class="text-[#c1c6db] hover:text-[#acdfff] transition-colors duration-300 flex items-center gap-1 font-label text-xs uppercase tracking-widest bg-surface-variant/30 px-3 py-2 rounded-lg border border-white/5">
+          <span class="material-symbols-outlined text-[16px]">language</span> <span id="currentLangLabel">PT</span>
+        </button>
+      </div>
   </nav>
   <main class="relative">
     <div class="fixed inset-0 grain-overlay z-10"></div>
