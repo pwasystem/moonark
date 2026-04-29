@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html class="dark" lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>MoonArk | Terminal de Dados</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&amp;display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background-color: #0d1322; color: #dde2f7; font-family: 'Space Grotesk', sans-serif; }
+    .grain-overlay {
+      background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuBRqY_GOc1i9ZHz4xrtSCmk4v1ybh0TOgj344mS3quk4ErMtf4OZN1W7AV4iKFC-o-LTAPp26ZQbAX2x4xHkIit2pTlO8u0zax0eerxk9ZIDf1oRUKJIqYMpvr48TaVX_DqaP6zdSsGAfJqwDJqiLvje5fpaHhRa2LMXEjZdrLW4iQry8RMBC7sPb711G14H9rCcpqTWWC-JqzB1GxcqN71_96WMBi3k-eQeo8vrlZS0y04gQVSGpB_nLV0KsHLH6j0yqeJJZ_IKA);
+      opacity: 0.05;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center min-h-screen relative overflow-hidden">
+  <div class="fixed inset-0 grain-overlay z-0"></div>
+  
+  <div class="p-8 bg-[#151b2a] rounded-2xl border border-white/10 shadow-[0_0_50px_rgba(120,197,241,0.1)] max-w-lg w-full text-center relative z-10">
+    <div class="w-16 h-16 rounded-full bg-[#005170]/30 mx-auto mb-6 flex items-center justify-center border border-[#78c5f1]/20">
+      <svg class="w-8 h-8 text-[#acdfff]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+    </div>
+    
+    <h1 class="text-3xl font-bold mb-2 text-[#acdfff] tracking-tight">Terminal Central</h1>
+    <p class="mb-8 text-[#c1c6db]">Bem-vindo de volta, <span id="userName" class="font-bold text-white">Guardião</span>.</p>
+    
+    <div class="space-y-4">
+      <div class="p-5 bg-[#0d1322] rounded-xl border border-white/5 text-left text-sm text-[#899299] font-mono leading-relaxed">
+        <p class="text-[#acdfff]">> Iniciando link quântico...</p>
+        <p>> Acesso concedido aos arquivos confidenciais.</p>
+        <p>> Nível de autorização verificado: <span class="text-[#ffb4ab]">Alpha</span>.</p>
+        <p class="mt-4 opacity-50">Sistemas operacionais. Nenhuma anomalia detectada.</p>
+      </div>
+      
+      <div class="grid grid-cols-2 gap-4 mt-6">
+        <a href="/" class="px-6 py-3 bg-[#191f2f] hover:bg-[#242a3a] text-white rounded-xl transition-colors border border-white/5 text-sm font-medium">Voltar à Superfície</a>
+        <button id="logoutBtn" class="px-6 py-3 bg-red-900/20 hover:bg-red-900/40 text-[#ffb4ab] rounded-xl transition-colors border border-red-500/20 text-sm font-medium">Desconectar</button>
+      </div>
+    </div>
+  </div>
+  
+  <script type="module" src="/assets/js/terminal.js"></script>
+</body>
+</html>

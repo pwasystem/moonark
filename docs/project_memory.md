@@ -67,6 +67,8 @@ A MoonArk é uma plataforma de arquivamento de dados interestelar e IA cognitiva
 ---
 
 ## 📅 Histórico de Mudanças Recentes
+- **2026-04-29**: Arquitetura do módulo de Autenticação Firebase v11 refatorada para Native ES Modules (Custo Zero, Alta Resiliência).
+- **2026-04-29**: Criação da infraestrutura inicial protegida do Terminal (`terminal.html` e `terminal.js`).
 - **2026-04-27**: Reestruturação total de pastas (`/public` e `/docs`).
 - **2026-04-27**: Implementação do sistema de Newsletter via Firestore e Regras de Segurança.
 - **2026-04-27**: Lançamento do Widget de Contato Flutuante integrado ao Google Apps Script.
@@ -75,10 +77,10 @@ A MoonArk é uma plataforma de arquivamento de dados interestelar e IA cognitiva
 ---
 
 ## 🔮 Próximos Passos Sugeridos
-- [ ] Implementar o painel real do "Terminal" após o login.
+- [x] Implementar o painel real do "Terminal" após o login. *(Base inicial protegida implementada)*
 - [ ] Configurar um domínio personalizado (`moonark.ai`).
 - [ ] Adicionar internacionalização (Inglês/Português).
 - [ ] Criar dashboard administrativo para visualizar inscritos da newsletter no Terminal.
 
 ---
-*Última atualização: 27 de Abril de 2026 (Versão 2.0)*
+*Última atualização: 29 de Abril de 2026 (Versão 2.1)*
